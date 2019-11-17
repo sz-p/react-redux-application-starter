@@ -14,12 +14,15 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import { BrowserRouter, Route } from 'react-router-dom';
 
-let store;
-if (process.env.NODE_ENV === 'production') {
-  store = createStore(reducer, applyMiddleware(promiseMiddleware));
-} else {
-  store = createStore(reducer, composeWithDevTools(applyMiddleware(promiseMiddleware)));
+const createStore = function(){
+  if (process.env.NODE_ENV === 'production') {
+    return createStore(reducer, applyMiddleware(promiseMiddleware));
+  } else {
+    return createStore(reducer, composeWithDevTools(applyMiddleware(promiseMiddleware)));
+  }
 }
+let store = createStore();
+
 
 function App() {
   return (

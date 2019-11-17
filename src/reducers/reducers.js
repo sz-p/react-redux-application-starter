@@ -5,19 +5,24 @@ Reducers 指定了应用状态的变化如何响应 actions 并发送到 store �
 */
 
 import * as type from '../actions/actionType';
-
-const initialState = {
-  page: 'index'
+import initialState from './initialState';
+const actionsCase = () => {
+  const change_page = (state, action) => {
+    return Object.assign({}, state, {
+      page: action.payload
+    });
+  };
+  return new Map([
+    [type.CHANGE_PAGE, change_page],
+  ])
 }
-
 function reducer(state = initialState, action) {
-  switch (action.type) {
-    case type.GET_CATEGORY:
-      return Object.assign({}, state, {
-        categoryList: action.payload
-      });
-    default:
-      return state
+  const actionFunction = actionsCase().get(action.type);
+  if (typeof actionFunction === 'function') {
+    return actionFunction(state, action);
+  }
+  else {
+    return state;
   }
 }
 
