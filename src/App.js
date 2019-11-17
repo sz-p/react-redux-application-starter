@@ -4,7 +4,7 @@ import './App.css';
 import IndexPage from './pages/index/index';
 import AboutPage from './pages/about/about';
 
-import { hot } from 'react-hot-loader'
+import { hot } from 'react-hot-loader';
 
 import reducer from './reducers/reducers';
 import { Provider } from 'react-redux';
@@ -14,27 +14,26 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import { BrowserRouter, Route } from 'react-router-dom';
 
-const createStore = function(){
-  if (process.env.NODE_ENV === 'production') {
-    return createStore(reducer, applyMiddleware(promiseMiddleware));
-  } else {
-    return createStore(reducer, composeWithDevTools(applyMiddleware(promiseMiddleware)));
-  }
-}
-let store = createStore();
-
+const createLocalStore = function() {
+	if (process.env.NODE_ENV === 'production') {
+		return createStore(reducer, applyMiddleware(promiseMiddleware));
+	} else {
+		return createStore(reducer, composeWithDevTools(applyMiddleware(promiseMiddleware)));
+	}
+};
+let store = createLocalStore();
 
 function App() {
-  return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <div id='container'>
-          <Route path={'/about'} component={AboutPage} />
-          <Route exact path={'/'} component={IndexPage} />
-        </div>
-      </BrowserRouter>
-    </Provider>
-  );
+	return (
+		<Provider store={store}>
+			<BrowserRouter basename={window.location.pathname}>
+				<div id="container">
+					<Route path={'/about'} component={AboutPage} />
+					<Route exact path={'/'} component={IndexPage} />
+				</div>
+			</BrowserRouter>
+		</Provider>
+	);
 }
 
 export default hot(module)(App);
